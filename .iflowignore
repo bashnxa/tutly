@@ -1,0 +1,52 @@
+# iFlow ignore patterns
+# Files and directories that should be excluded from TDD validation
+
+# Generated files
+*.g.dart
+*.freezed.dart
+*.mocks.dart
+*.gen.dart
+
+# Build artifacts
+build/
+.dart_tool/
+.flutter-plugins
+.flutter-plugins-dependencies
+.packages
+.pub-cache/
+.pub/
+
+# IDE
+.idea/
+.vscode/
+*.iml
+*.ipr
+*.iws
+.DS_Store
+
+# Test files (don't require tests for tests)
+test/**/*.dart
+
+# Configuration files that don't need tests
+pubspec.yaml
+analysis_options.yaml
+metadata
+.gitignore
+
+# Platform-specific files
+android/
+ios/
+linux/
+macos/
+windows/
+web/
+
+# Documentation
+README.md
+*.md
+docs/
+
+# Assets that don't need tests
+assets/
+images/
+fonts/
