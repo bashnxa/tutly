@@ -7,6 +7,7 @@ class Place {
   final double lat;
   final double lng;
   final String description;
+  final String? imageUrl;
   final double? distance;
 
   Place({
@@ -16,6 +17,7 @@ class Place {
     required this.lat,
     required this.lng,
     required this.description,
+    this.imageUrl,
     this.distance,
   });
 
@@ -27,6 +29,7 @@ class Place {
       lat: (json['lat'] as num).toDouble(),
       lng: (json['lng'] as num).toDouble(),
       description: json['description'] as String,
+      imageUrl: json['imageUrl'] as String?,
     );
   }
 
@@ -38,6 +41,7 @@ class Place {
       'lat': lat,
       'lng': lng,
       'description': description,
+      'imageUrl': imageUrl,
     };
   }
 
@@ -48,6 +52,7 @@ class Place {
     double? lat,
     double? lng,
     String? description,
+    String? imageUrl,
     double? distance,
   }) {
     return Place(
@@ -57,6 +62,7 @@ class Place {
       lat: lat ?? this.lat,
       lng: lng ?? this.lng,
       description: description ?? this.description,
+      imageUrl: imageUrl ?? this.imageUrl,
       distance: distance ?? this.distance,
     );
   }

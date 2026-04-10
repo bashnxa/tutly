@@ -44,7 +44,47 @@ class PlaceCard extends StatelessWidget {
                 ),
               ),
               child: Stack(
+                fit: StackFit.expand,
                 children: [
+                  // Image if available
+                  if (place.imageUrl != null)
+                    Image.asset(
+                      place.imageUrl!,
+                      fit: BoxFit.cover,
+                      errorBuilder: (context, error, stackTrace) {
+                        // Fallback to gradient if image fails to load
+                        return Center(
+                          child: Icon(
+                            _getCategoryIcon(category.id),
+                            size: 64,
+                            color: Colors.white.withOpacity(0.9),
+                          ),
+                        );
+                      },
+                    )
+                  else
+                    // Center content (placeholder for image)
+                    Center(
+                      child: Icon(
+                        _getCategoryIcon(category.id),
+                        size: 64,
+                        color: Colors.white.withOpacity(0.9),
+                      ),
+                    ),
+                  // Dark overlay for better text visibility
+                  if (place.imageUrl != null)
+                    Container(
+                      decoration: BoxDecoration(
+                        gradient: LinearGradient(
+                          begin: Alignment.topCenter,
+                          end: Alignment.bottomCenter,
+                          colors: [
+                            Colors.transparent,
+                            Colors.black.withOpacity(0.3),
+                          ],
+                        ),
+                      ),
+                    ),
                   // Category badge
                   Positioned(
                     top: 12,
@@ -58,14 +98,6 @@ class PlaceCard extends StatelessWidget {
                       right: 12,
                       child: _buildDistanceBadge(theme),
                     ),
-                  // Center content (placeholder for image)
-                  Center(
-                    child: Icon(
-                      _getCategoryIcon(category.id),
-                      size: 64,
-                      color: Colors.white.withOpacity(0.9),
-                    ),
-                  ),
                 ],
               ),
             ),

@@ -27,6 +27,12 @@ class TutlyApp extends StatelessWidget {
         seedColor: const Color(0xFF667eea),
         brightness: Brightness.light,
       ),
+      appBarTheme: const AppBarTheme(
+        backgroundColor: Colors.white,
+        foregroundColor: Colors.black,
+        elevation: 0,
+        centerTitle: true,
+      ),
       cardTheme: CardThemeData(
         elevation: 4,
         shape: RoundedRectangleBorder(
@@ -47,6 +53,12 @@ class TutlyApp extends StatelessWidget {
       colorScheme: ColorScheme.fromSeed(
         seedColor: const Color(0xFF667eea),
         brightness: Brightness.dark,
+      ),
+      appBarTheme: const AppBarTheme(
+        backgroundColor: Colors.white,
+        foregroundColor: Colors.black,
+        elevation: 0,
+        centerTitle: true,
       ),
       cardTheme: CardThemeData(
         elevation: 4,

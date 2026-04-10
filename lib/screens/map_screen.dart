@@ -27,13 +27,14 @@ class _MapScreenState extends State<MapScreen> {
   final MapController _mapController = MapController();
   late final List<Marker> _markers;
   late final List<Polyline> _polylines;
+  bool _isFirstBuild = true;
 
   @override
   void initState() {
     super.initState();
     _markers = _buildMarkers();
     _polylines = _buildPolylines();
-    _centerMapOnSelectedPlace();
+    // Don't center map here - wait for FlutterMap to render first
   }
 
   List<Marker> _buildMarkers() {
@@ -143,20 +144,27 @@ class _MapScreenState extends State<MapScreen> {
   }
 
   void _centerMapOnSelectedPlace() {
-    if (widget.selectedPlace != null) {
-      _mapController.move(
-        LatLng(widget.selectedPlace!.lat, widget.selectedPlace!.lng),
-        15,
-      );
-    } else if (widget.places.isNotEmpty) {
-      // Center on all places
-      final bounds = _calculateBounds();
-      _mapController.fitCamera(
-        CameraFit.bounds(
-          bounds: bounds,
-          padding: const EdgeInsets.all(50),
-        ),
-      );
+    try {
+      print('Centering map...');
+      if (widget.selectedPlace != null) {
+        print('Centering on selected place: ${widget.selectedPlace!.name}');
+        _mapController.move(
+          LatLng(widget.selectedPlace!.lat, widget.selectedPlace!.lng),
+          15,
+        );
+      } else if (widget.places.isNotEmpty) {
+        // Center on all places
+        final bounds = _calculateBounds();
+        print('Centering on all places bounds');
+        _mapController.fitCamera(
+          CameraFit.bounds(
+            bounds: bounds,
+            padding: const EdgeInsets.all(50),
+          ),
+        );
+      }
+    } catch (e) {
+      print('Error centering map: $e');
     }
   }
 
@@ -283,6 +291,16 @@ class _MapScreenState extends State<MapScreen> {
 
   @override
   Widget build(BuildContext context) {
+    // Center map after first build when FlutterMap is rendered
+    if (_isFirstBuild) {
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        _centerMapOnSelectedPlace();
+        setState(() {
+          _isFirstBuild = false;
+        });
+      });
+    }
+
     return Scaffold(
       appBar: AppBar(
         title: const Text('Карта'),

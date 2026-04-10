@@ -46,6 +46,8 @@ class _PlacesListState extends State<PlacesList> {
       final position = await _locationService.getCurrentLocation();
       if (!mounted) return;
       
+      print('Location received: ${position.latitude}, ${position.longitude}');
+      
       setState(() {
         _currentPosition = position;
         _isNearbyMode = true;
@@ -54,13 +56,15 @@ class _PlacesListState extends State<PlacesList> {
       
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
-            content: Text('Ваше местоположение определено'),
+          SnackBar(
+            content: Text('Ваше местоположение определено: ${position.latitude.toStringAsFixed(4)}, ${position.longitude.toStringAsFixed(4)}'),
             behavior: SnackBarBehavior.floating,
+            duration: const Duration(seconds: 3),
           ),
         );
       }
     } catch (e) {
+      print('Location error: $e');
       if (!mounted) return;
       
       setState(() {
@@ -72,6 +76,7 @@ class _PlacesListState extends State<PlacesList> {
           SnackBar(
             content: Text('Не удалось определить местоположение: ${e.toString()}'),
             behavior: SnackBarBehavior.floating,
+            duration: const Duration(seconds: 5),
           ),
         );
       }
@@ -108,6 +113,7 @@ class _PlacesListState extends State<PlacesList> {
         lat: 54.7181,
         lng: 55.9694,
         description: 'Символ дружбы народов, панорамный вид на Белую',
+        imageUrl: 'assets/images/Монумент_Дружбы.jpg',
       ),
       Place(
         id: 2,
@@ -116,6 +122,7 @@ class _PlacesListState extends State<PlacesList> {
         lat: 54.7229,
         lng: 55.9344,
         description: 'Главный символ Уфы на высоком берегу',
+        imageUrl: 'assets/images/Салават_Юлаев.jpg',
       ),
       Place(
         id: 3,
@@ -124,6 +131,7 @@ class _PlacesListState extends State<PlacesList> {
         lat: 54.7212,
         lng: 55.9398,
         description: 'Лучшее место для прогулок у воды',
+        imageUrl: 'assets/images/Набережная_реки_Белой.jpg',
       ),
       Place(
         id: 11,
@@ -132,6 +140,7 @@ class _PlacesListState extends State<PlacesList> {
         lat: 54.7379,
         lng: 55.9602,
         description: 'Национальная башкирская кухня',
+        imageUrl: 'assets/images/dom_bashkirskoy_kukhni.jpg',
       ),
       Place(
         id: 16,
@@ -140,6 +149,7 @@ class _PlacesListState extends State<PlacesList> {
         lat: 54.7221,
         lng: 55.9412,
         description: 'Популярное место для фото',
+        imageUrl: 'assets/images/Сердце_Уфы.jpg',
       ),
     ];
   }
@@ -154,6 +164,8 @@ class _PlacesListState extends State<PlacesList> {
     }
 
     if (_isNearbyMode && _currentPosition != null) {
+      print('Nearby mode enabled. Current position: ${_currentPosition!.latitude}, ${_currentPosition!.longitude}');
+      
       filteredPlaces = filteredPlaces.map((place) {
         final distance = Place.calculateDistance(
           _currentPosition!.latitude,
@@ -161,6 +173,7 @@ class _PlacesListState extends State<PlacesList> {
           place.lat,
           place.lng,
         );
+        print('Distance to ${place.name}: ${distance.toStringAsFixed(0)}m');
         return place.copyWith(distance: distance);
       }).toList();
 
@@ -190,24 +203,33 @@ class _PlacesListState extends State<PlacesList> {
             expandedHeight: 200,
             floating: false,
             pinned: true,
+            backgroundColor: Colors.white,
+            foregroundColor: Colors.black,
             flexibleSpace: FlexibleSpaceBar(
-              title: const Text('Tutly'),
               background: Container(
-                decoration: BoxDecoration(
-                  gradient: LinearGradient(
-                    begin: Alignment.topLeft,
-                    end: Alignment.bottomRight,
-                    colors: [
-                      Color(0xFF667eea),
-                      Color(0xFF764ba2),
-                    ],
-                  ),
+                decoration: const BoxDecoration(
+                  color: Colors.white,
                 ),
-                child: const Center(
-                  child: Icon(
-                    Icons.explore_outlined,
-                    size: 64,
-                    color: Colors.white,
+                child: Center(
+                  child: Container(
+                    decoration: BoxDecoration(
+                      color: Colors.white,
+                      borderRadius: BorderRadius.circular(16),
+                    ),
+                    padding: const EdgeInsets.all(20),
+                    child: Image.asset(
+                      'assets/images/logo_tutly.png',
+                      width: 120,
+                      height: 120,
+                      errorBuilder: (context, error, stackTrace) {
+                        // Fallback to icon if image fails to load
+                        return const Icon(
+                          Icons.explore_outlined,
+                          size: 64,
+                          color: Colors.black,
+                        );
+                      },
+                    ),
                   ),
                 ),
               ),
